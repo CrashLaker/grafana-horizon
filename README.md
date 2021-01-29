@@ -12,6 +12,14 @@ One first approach on utilizing this plugin would would be to give the user a bi
 
 ![](./images/demo0.gif)
 
+## Install
+
+Download `.zip` and extract it to your grafana plugins folder e.g. `/var/lib/grafana/plugins`.
+
+Then click Horizon Badge in your visualizations gallery.
+
+![](./images/horizon-badge.png)
+
 ## Concepts
 ### What is a Horizon Plot?
 https://bernatgel.github.io/karyoploter_tutorial/Tutorial/PlotHorizon/PlotHorizon.html
