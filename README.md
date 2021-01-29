@@ -6,7 +6,7 @@ Grealtly inspired by [small multiples](https://en.wikipedia.org/wiki/Small_multi
 
 One first approach on utilizing this plugin would would be to give the user a bird's-eye view of what one's willing to monitor. Allowing the user to quickly grasp changes and insights.
 
-[![](./images/showcase0.png =400x)](./images/showcase0.png)
+![](./images/showcase0.png =400x)
 
 ## Demo
 
