@@ -6,12 +6,16 @@ Grealtly inspired by [small multiples](https://en.wikipedia.org/wiki/Small_multi
 
 One first approach on utilizing this plugin would would be to give the user a bird's-eye view of what one's willing to monitor. Allowing the user to quickly grasp changes and insights.
 
+## Demo
+
+![](./images/demo0.gif)
 
 ## Concepts
 ### What is a Horizon Plot?
 https://bernatgel.github.io/karyoploter_tutorial/Tutorial/PlotHorizon/PlotHorizon.html
 
-![](./images/demo0.gif)
+![](./images/horizon-explain.gif)
+
 
 ## First Release 0.1.0
 What's in this first release?
