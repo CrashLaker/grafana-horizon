@@ -1,6 +1,6 @@
 {
-  "name": "a-my-plugin",
-  "version": "1.0.0",
+  "name": "grafana-horizon",
+  "version": "0.1.0",
   "description": "a",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
@@ -8,8 +8,8 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "repository": "github:grafana/simple-react-panel",
-  "author": "a",
+  "repository": "github:CrashLaker/grafana-horizon",
+  "author": "CrashLaker",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/grafana/simple-react-panel/issues",
