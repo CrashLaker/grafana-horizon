@@ -6,7 +6,7 @@ Grealtly inspired by [small multiples](https://en.wikipedia.org/wiki/Small_multi
 
 One first approach on utilizing this plugin would would be to give the user a bird's-eye view of what one's willing to monitor. Allowing the user to quickly grasp changes and insights.
 
-![](./images/showcase0.png =400x)
+![](./images/showcase0.png)
 
 ## Demo
 
@@ -41,6 +41,7 @@ What's in this first release?
 
 ## TODO
 * Sort series by some aggregation. e.g. last, mean, avg, percentile, etc.
+* Brush change timerange
 * Shared Mouse Hover Tooltip Ruler
     * Fetch event from other panels
     * Emit to other panels
