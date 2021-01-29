@@ -1,0 +1,36 @@
+{
+  "type": "panel",
+  "name": "Horizon",
+  "id": "crashlaker-horizon",
+  "info": {
+    "description": "Grafana Plugin for Multiple Data Visualization",
+    "author": {
+      "name": "CrashLaker",
+      "url": "https://github.com/CrashLaker"
+    },
+    "keywords": [
+      "grafana", "cubism", "horizon", "small-multiples"
+    ],
+    "logos": {
+      "small": "img/logo-horizon.png",
+      "large": "img/logo-horigon.png"
+    },
+    "links": [
+      {
+        "name": "Github Project",
+        "url": "https://github.com/CrashLaker/grafana-horizon"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/CrashLaker/grafana-horizon/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "0.1.0",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}
