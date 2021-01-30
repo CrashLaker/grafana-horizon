@@ -10,7 +10,7 @@ One first approach on utilizing this plugin would would be to give the user a bi
 
 ## Demo
 
-![](./images/demo0.gif)
+![](./images/grafana-horizon-demo1.gif)
 
 ## Install
 
