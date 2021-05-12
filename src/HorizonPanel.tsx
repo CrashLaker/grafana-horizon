@@ -18,6 +18,8 @@ const {
   genMetaGrafana,
   getGrafanaColor,
   bSearchLeftMost,
+  makeid,
+  doSort,
 } = plotlib.aux
 
 //console.log('plotlib', plotlib)
@@ -28,8 +30,15 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
   const theme = useTheme();
   const styles = getStyles();
 
-  //console.log(options)
-  //console.log(data)
+  const {
+    enableDebug,
+    anonymize,
+  } = options
+
+  if (enableDebug){
+    console.log(options)
+    console.log(data)
+  }
 
   const containerRef = useRef()
   const rulerRef = useRef()
@@ -54,6 +63,9 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
       seriesMargin,
       showLabels,
       showValuesRuler,
+      sort,
+      sortOrder,
+      dummyData,
     } = options
 
     let {
@@ -64,8 +76,13 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
 
     const div = d3.select(containerRef.current)
 
-
-    const rows = data.series.length
+    const rows = data.series.reduce((g,d,i) => {
+      if (d.name == 'wide' && d.fields.length > 2) { // dataframe
+        return g+d.fields.length-1
+      }else{
+        return g+1
+      }
+    }, 0)
     const [h_w, h_h] = [width, seriesHeight[0]]
     //const bezelOffset = 0
     //const barWidth = 3
@@ -120,7 +137,37 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
       rulerValRef: {},
     }
 
-    const _rulerSpans = data.series.map((d,i) => {
+    let gseries = []
+    data.series.map((d) => {
+      if (d.name == 'wide' && d.fields.length > 2) { // dataframe
+        const typeTimeSeries = d.fields.filter(dd => dd.type == 'time')[0].values.buffer
+        d.fields.map(dd => {
+          if (dd.type == 'number'){
+            gseries.push({
+              fields:[
+                { name: 'Time', type: 'time', values: {buffer: typeTimeSeries}},
+                {
+                  name: 'Value', 
+                  type: 'number', 
+                  values: {buffer: dd.values.buffer},
+                  config: dd.config,
+                },
+              ],
+              name: dd.name,
+              refId: 'A',
+              length: d.length,
+            })
+          }
+        })
+      }else{
+        gseries.push(d)
+      }
+    })
+    if (enableDebug){
+      console.log(gseries)
+    }
+
+    const _rulerSpans = gseries.map((d,i) => {
       //rulerMeta.rulerValRef[i] = thisRef
       return <span 
         style={{
@@ -134,10 +181,35 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
       </span>
     })
 
-    const canvasRows = data.series.map((serie,i) => {
+    const canvasRows = doSort(sort, sortOrder, gseries).map((serie,i) => {
 
-      const meta = genMetaGrafana(serie, width, h_h)
-      meta.x = globalX
+      if (!dummyData) {
+        var meta = genMetaGrafana(serie, width, h_h);
+        meta.x = globalX;
+
+        if (anonymize) {
+          var newName = '';
+
+          if (meta.name.includes(':')) {
+            newName = "" + makeid(5) + i + " :" + meta.name.split(':')[1];
+          } else {
+            newName = "" + makeid(5) + i;
+          }
+
+          meta.name = newName;
+        }
+      } else {
+        var meta2 = genMetaGrafana(serie, width, h_h); //console.log('globalx domain [0]', globalX.domain()[0])
+
+        var step = (globalX.domain()[1] - globalX.domain()[0]) / width; //console.log(step)
+
+        var data_1 = genData(width, true, globalX.domain()[0], step);
+        var meta = preRender(data_1, 4, h_w, h_h);
+        meta.name = serie.name;
+        meta.colorPos = meta2.colorPos;
+        meta.colorNeg = meta2.colorNeg; //meta.colorPos = colors_blue
+        //meta.colorNeg = colors_red
+      }
 
       //const data = genData(width, true, globalX.domain()[0])
       //const meta = preRender(data, 4, h_w, h_h)
@@ -201,23 +273,31 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
         }}
         onMouseMove={(e) => {
           e.persist()
-          let offset = 10
-          if (e.clientX + offset > width)
-            offset = width-e.clientX
-          offset = -10
+          var bbox = e.target.getBoundingClientRect();
+          var layerX = e.nativeEvent.layerX;
+          var offset = 10;
+          if (bbox.x + layerX + offset > bbox.x + bbox.width) return;
+          var setRight = true;
+          if (bbox.x + layerX + offset + 100 > bbox.x + bbox.width) setRight = false;
           d3.select(rulerRef.current)
-            .style('left', e.clientX+offset+'px')
+            .style('left', layerX+offset+'px')
             .style('display', 'block')
-          if (showValuesRuler){
-            let timeSeek = globalX.invert(e.clientX)
-            for (let i in rulerMeta.pre){
-              let pre = rulerMeta.pre[i]
-              let arrPos = bSearchLeftMost(pre.meta.data, pre.meta.data.length, timeSeek)
-              let valuePos = pre.meta.data[arrPos].y
-              //console.log(e.clientX, timeSeek, arrPos, valuePos, new Date(timeSeek))
-              rulerRef.current.childNodes[i].textContent = valuePos.toFixed(2)
+            if (showValuesRuler) {
+              var timeSeek = globalX.invert(layerX + offset);
+  
+              for (var i_1 in rulerMeta.pre) {
+                var pre = rulerMeta.pre[i_1];
+                var arrPos = bSearchLeftMost(pre.meta.data, pre.meta.data.length, timeSeek);
+                var valueObj = pre.meta.data[arrPos];
+  
+                if (valueObj) {
+                  var valuePos = valueObj.y; //console.log(e.clientX, timeSeek, arrPos, valuePos, new Date(timeSeek))
+  
+                  if (valuePos) rulerRef.current.childNodes[i_1].textContent = valuePos.toFixed(2);
+                  if (!setRight) rulerRef.current.childNodes[i_1].style.left = '-80px';else rulerRef.current.childNodes[i_1].style.left = '10px';
+                }
+              }
             }
-          }
         }}
         onMouseLeave={() => {
           //console.log('mouseout')

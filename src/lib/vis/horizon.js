@@ -16,7 +16,7 @@ export const horizonVis = (idx, pre) => {
     ctx.strokeRect(0,0,width,height)
     //ctx.strokeRect(0,-height/2,width,height)
   }
-  if (cval.y > 0){
+  if (cval.y >= 0){
     for (let i = 0; i < bandPos.length-1; i++){
       if (cval.y < bandPos[i]) break
       color = colorPos[i]

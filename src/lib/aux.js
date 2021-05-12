@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { getColorByName } from '@grafana/data'
+import { getColorDefinitionByName } from '@grafana/data'
 
 export const genData = (values=1500, withVariance=true, offset=0) => {
   var series = [];
@@ -19,7 +19,7 @@ export const genData = (values=1500, withVariance=true, offset=0) => {
 }
 
 export const getGrafanaColor = (bgColor) => {
-    let bgColorFn = getColorByName(bgColor)
+    let bgColorFn = getColorDefinitionByName(bgColor)
     return (bgColorFn) ? bgColorFn.variants.dark : bgColor 
 }
 
@@ -37,7 +37,6 @@ export const genMetaGrafana = (serie, width, height) => {
       y: d,
     }
   })
-  //console.log('data', data)
 
   //const extent = d3.extent(data)
   const extent = [config.min, config.max]
@@ -211,3 +210,123 @@ export const bSearchLeftMost = (arr, n, target) => {
   }
   return L
 }
+
+//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+export const makeid = (length) => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+};
+
+// https://stackoverflow.com/questions/48719873/how-to-get-median-and-quartiles-percentiles-of-an-array-in-javascript-or-php
+// sort array ascending
+
+var asc = function asc(arr) {
+  return arr.sort(function (a, b) {
+    return a - b;
+  });
+};
+
+var sum = function sum(arr) {
+  return arr.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+};
+
+var mean = function mean(arr) {
+  return sum(arr) / arr.length;
+}; // sample standard deviation
+
+
+var std = function std(arr) {
+  var mu = mean(arr);
+  var diffArr = arr.map(function (a) {
+    return Math.pow(a - mu, 2);
+  });
+  return Math.sqrt(sum(diffArr) / (arr.length - 1));
+};
+
+var quantile = function quantile(arr, q) {
+  var sorted = asc(arr);
+  var pos = (sorted.length - 1) * q;
+  var base = Math.floor(pos);
+  var rest = pos - base;
+
+  if (sorted[base + 1] !== undefined) {
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  } else {
+    return sorted[base];
+  }
+};
+
+const avg = (arr) => {
+  return sum(arr) / arr.length;
+};
+
+const min = (arr) => {
+  return Math.min.apply(Math, _toConsumableArray(arr));
+};
+
+var max = (arr) => {
+  return Math.max.apply(Math, _toConsumableArray(arr));
+};
+
+var last = (arr) => {
+  return arr[arr.length - 1];
+};
+
+var p90 = (arr) => {
+  return quantile(arr, .90);
+};
+
+const renderSort = (fn, sortOrder, series) => {
+  var preRender = series.map(function (d, idx) {
+    var values = d.fields.filter(function (d) {
+      return d.type == 'number';
+    })[0].values.buffer;
+    var agg = fn(values);
+    return {
+      idx: idx,
+      agg: agg
+    };
+  });
+  var ret = preRender.sort(function (a, b) {
+    return b.agg - a.agg; // DESC
+  }).map(function (d) {
+    return series[d.idx];
+  });
+  if (sortOrder) // if true == ASC
+    ret.reverse();
+  return ret;
+};
+
+export const doSort = (whichSort, sortOrder, series) => {
+  switch (whichSort) {
+    case 'avg':
+      return renderSort(avg, sortOrder, series);
+
+    case 'min':
+      return renderSort(min, sortOrder, series);
+
+    case 'max':
+      return renderSort(max, sortOrder, series);
+
+    case 'last':
+      return renderSort(last, sortOrder, series);
+
+    case 'percentile90':
+      return renderSort(p90, sortOrder, series);
+
+    case 'none':
+      return series;
+
+    default:
+      return series;
+  }
+};

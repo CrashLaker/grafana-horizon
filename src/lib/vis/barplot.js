@@ -27,7 +27,7 @@ export const barplotVis = (idx, pre) => {
   //    ctx.fillRect(startX, yUse(cval.y), barWidth, height-yUse(cval.y))
   //}
 
-  if (cval.y > 0){
+  if (cval.y >= 0){
     for (let i = 0; i < bandPos.length-1; i++){
       if (bandPos[i] > cval.y) break
       ctx.fillStyle = colorPos[i]

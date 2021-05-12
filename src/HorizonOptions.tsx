@@ -131,7 +131,56 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<HorizonOptions
       path: 'bgColor',
       name: 'Set background color',
       editor: ColorPickerEditor,
+      defaultValue: 'rgb(36, 38, 43)',
     })
+    builder.addSelect({
+      category: ['Data'],
+      path: 'sort',
+      name: 'Set sort',
+      defaultValue: 'avg',
+      settings: {
+        options: [{
+          value: 'none',
+          label: 'None'
+        }, {
+          value: 'avg',
+          label: 'Average'
+        }, {
+          value: 'max',
+          label: 'Max'
+        }, {
+          value: 'min',
+          label: 'Min'
+        }, {
+          value: 'last',
+          label: 'Last'
+        }, {
+          value: 'percentile90',
+          label: 'Percentile 90'
+        }]
+      }
+    }).addBooleanSwitch({
+      category: ['Data'],
+      path: 'sortOrder',
+      name: 'Sort Order Ascending?',
+      defaultValue: false
+    }).addBooleanSwitch({
+      category: ['Data'],
+      path: 'dummyData',
+      name: 'Enable dummy data?',
+      defaultValue: false
+    });
+    builder.addBooleanSwitch({
+      category: ['Debug'],
+      path: 'enableDebug',
+      name: 'Enable Debug?',
+      defaultValue: false
+    }).addBooleanSwitch({
+      category: ['Debug'],
+      path: 'anonymize',
+      name: 'Anonymize?',
+      defaultValue: false
+    });    
 }
 
 const addCustomCategory = (builder: PanelOptionsEditorBuilder<HorizonOptions>, props) => {

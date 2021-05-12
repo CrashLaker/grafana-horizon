@@ -10,7 +10,7 @@ export const discreteVis = (idx, pre) => {
   
   const {slices, yPos, bandPos, bandNeg, bandPosY, bandNegY} = pre.meta
   let color = 'grey'
-  if (cval.y > 0){
+  if (cval.y >= 0){
     for (let i = 0; i < bandPos.length-1; i++){
       if (cval.y > bandPos[i] && cval.y <= bandPos[i+1]){ // 0 < x <= 10
         color = colorPos[i]
