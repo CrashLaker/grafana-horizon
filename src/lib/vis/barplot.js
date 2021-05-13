@@ -4,10 +4,15 @@ import {
 
 
 export const barplotVis = (idx, pre) => {
-  const {mirror, sketchy, width, height, barWidth, bezelOffset, colorPos, colorNeg} = pre.style
+  //const {mirror, sketchy, width, height, barWidth, bezelOffset, colorPos, colorNeg} = pre.style
+  const {mirror, sketchy, width, height, bezelOffset, colorPos, colorNeg} = pre.style
   const cval = pre.meta.data[idx]
   const {ctx} = pre
-  const startX = pre.meta.x(cval.x)*barWidth + pre.meta.x(cval.x)*bezelOffset
+  //const startX = pre.meta.x(cval.x)*barWidth + pre.meta.x(cval.x)*bezelOffset
+  const startX = pre.meta.x(cval.x)
+  let barWidth = (idx == pre.meta.data.length-1)
+                  ? width - pre.meta.x(cval.x)
+                  : pre.meta.x(pre.meta.data[idx+1].x) - startX
   
   const {slices, yPos2, yNeg2, bandPos, bandNeg, bandPosY, bandNegY} = pre.meta
 
