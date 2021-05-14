@@ -38,6 +38,10 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
   if (enableDebug){
     console.log(options)
     console.log(data)
+    window.horizon = {
+      options,
+      data,
+    }
   }
 
   const containerRef = useRef()
@@ -180,7 +184,10 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
 
     if (enableDebug){
       console.log(gseries)
-      window.debug = gseries
+      window.horizon = {
+        ...window.horizon,
+        gseries
+      }
     }
     const canvasRows = doSort(sort, sortOrder, gseries).map((serie,i) => {
 
@@ -290,11 +297,19 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
                 var pre = rulerMeta.pre[i_1];
                 var arrPos = bSearchLeftMost(pre.meta.data, pre.meta.data.length, timeSeek);
                 var valueObj = pre.meta.data[arrPos];
+                
+
+                //console.log(globalX(valueObj.x), (layerX + offset))
+                if (Math.abs(globalX(valueObj.x) - (layerX + offset)) > 10){
+                  rulerRef.current.childNodes[i_1].textContent = ''
+                  continue
+                }
   
                 if (valueObj) {
                   var valuePos = valueObj.y; //console.log(e.clientX, timeSeek, arrPos, valuePos, new Date(timeSeek))
   
-                  if (valuePos) rulerRef.current.childNodes[i_1].textContent = valuePos.toFixed(2);
+                  if (valuePos || valuePos === 0) rulerRef.current.childNodes[i_1].textContent = valuePos.toFixed(2);
+                  else rulerRef.current.childNodes[i_1].textContent = ''
                   if (!setRight) rulerRef.current.childNodes[i_1].style.left = '-80px';else rulerRef.current.childNodes[i_1].style.left = '10px';
                 }
               }
