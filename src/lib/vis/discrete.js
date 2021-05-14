@@ -21,19 +21,22 @@ export const discreteVis = (idx, pre) => {
         color = colorPos[i]
         break
       }
+    }
+  }else{
+    for (let i = 0; i < bandNeg.length-1; i++){
+      if (cval.y < bandNeg[i] && cval.y >= bandNeg[i+1]){ // 0 > x >= -10
+        color = colorNeg[i]
+        break
       }
-    }else{
-      for (let i = 0; i < bandNeg.length-1; i++){
-        if (cval.y < bandNeg[i] && cval.y >= bandNeg[i+1]){ // 0 > x >= -10
-          color = colorNeg[i]
-          break
-        }
-        }
-      }
-      ctx.fillStyle = color
-      ctx.strokeStyle = color
-      if (sketchy)
-        makeSketchy(ctx, startX, 0, barWidth, height)
-      else
-        ctx.fillRect(startX, 0, barWidth, height)
+    }
+  }
+
+  if (cval.y != 0){
+    ctx.fillStyle = color
+    ctx.strokeStyle = color
+    if (sketchy)
+      makeSketchy(ctx, startX, 0, barWidth, height)
+    else
+      ctx.fillRect(startX, 0, barWidth, height)
+  }
 }

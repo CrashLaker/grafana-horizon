@@ -163,9 +163,6 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
         gseries.push(d)
       }
     })
-    if (enableDebug){
-      console.log(gseries)
-    }
 
     const _rulerSpans = gseries.map((d,i) => {
       //rulerMeta.rulerValRef[i] = thisRef
@@ -181,6 +178,10 @@ export const HorizonPanel: React.FC<Props> = ({ options, data, width, height }) 
       </span>
     })
 
+    if (enableDebug){
+      console.log(gseries)
+      window.debug = gseries
+    }
     const canvasRows = doSort(sort, sortOrder, gseries).map((serie,i) => {
 
       if (!dummyData) {
