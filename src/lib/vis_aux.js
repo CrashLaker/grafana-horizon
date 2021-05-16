@@ -3,6 +3,7 @@ import {
   discreteVis,
   horizonVis,
   barplotVis,
+  dotplotVis,
 } from './vis'
 
 import * as d3 from 'd3'
@@ -30,6 +31,9 @@ export const applyVis = (useVis, idx, pre) => {
       break
     case 'barplot':
       barplotVis(idx, pre)
+      break
+    case 'dotplot':
+      dotplotVis(idx, pre)
       break
   }
   
@@ -84,3 +88,23 @@ export const makeSketchy = (ctx, startX, startY, width, height) => {
   
   ctx.stroke(new Path2D(fillCode))
 }
+
+//https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+export const componentToHex = (c) => {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+export const rgbToHex = (r, g, b) => {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+export const hexToRgb = (hex) => {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? [
+    parseInt(result[1], 16),
+    parseInt(result[2], 16),
+    parseInt(result[3], 16),
+  ] : null;
+}
+

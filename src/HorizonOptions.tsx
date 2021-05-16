@@ -32,6 +32,10 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<HorizonOptions
             value: 'barplot',
             label: 'BarPlot',
           },
+          {
+            value: 'dotplot',
+            label: 'DotPlot',
+          },
         ],
       }
     })
