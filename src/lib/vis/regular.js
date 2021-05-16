@@ -13,7 +13,7 @@ export const regularVis = (idx, pre) => {
   let barWidth = (idx == pre.meta.data.length-1)
                   ? width - pre.meta.x(cval.x)
                   : pre.meta.x(pre.meta.data[idx+1].x) - startX
-  
+  barWidth +=1 // check #21
   const {slices, yPos, yNeg, bandPos, bandNeg, bandPosY, bandNegY} = pre.meta
 
     if (0){
